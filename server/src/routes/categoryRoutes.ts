@@ -1,17 +1,17 @@
 import express, { Router } from 'express';
 import {
-  getCategories,
-  createCategory,
-  updateCategory,
+  get,
+  create,
+  edit,
   deleteCategory,
 } from '../controllers/category.controllers';
 
 export const catRoute: Router = express.Router();
 
-catRoute.get('/', getCategories);
+catRoute.get('/category', get);
 
-catRoute.post('/', createCategory);
+catRoute.post('/category', create);
 
-catRoute.put('/:id', updateCategory);
+catRoute.put('/category/:id', edit);
 
-catRoute.delete('/:id', deleteCategory);
+catRoute.delete('/category/:id', deleteCategory);

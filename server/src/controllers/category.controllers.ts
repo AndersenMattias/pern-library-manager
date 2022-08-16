@@ -3,7 +3,21 @@ import { pool } from '../config/db';
 
 const router: Router = express.Router();
 
-export const createCategory = async (
+export const get = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const fetchCategories = await pool.query(
+      `SELECT * FROM "Category" ORDER BY title ASC`
+    );
+    res.status(200).send(fetchCategories.rows);
+  } catch (e) {
+    if (e instanceof Error) {
+      console.log(e.message);
+      throw new Error('Something went wrong..');
+    }
+  }
+};
+
+export const create = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -26,27 +40,7 @@ export const createCategory = async (
   }
 };
 
-export const getCategories = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const fetchCategories = await pool.query(`SELECT * FROM "Category"`);
-    res.status(200).send(fetchCategories.rows);
-  } catch (e) {
-    if (e instanceof Error) {
-      console.log(e.message);
-      throw new Error('Something went wrong..');
-    }
-  }
-};
-
-export const updateCategory = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const edit = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = parseInt(req.params.id);
     const { categoryName } = req.body;

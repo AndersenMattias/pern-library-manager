@@ -1,9 +1,13 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-// import routes from './routes';
-import { pool } from './config/db';
-import { catRoute, refBookRoute, audioBookRoute, dvdRoute } from './routes/';
+import {
+  catRoute,
+  refBookRoute,
+  audioBookRoute,
+  dvdRoute,
+  bookRoute,
+} from './routes/';
 
 dotenv.config();
 
@@ -24,7 +28,8 @@ const startServer = () => {
 
 startServer();
 
-app.use('/api', catRoute);
+app.use('/api/', catRoute);
 app.use('/api/', refBookRoute);
 app.use('/api/', audioBookRoute);
 app.use('/api/', dvdRoute);
+app.use('/api/', bookRoute);
