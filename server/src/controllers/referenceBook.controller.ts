@@ -21,6 +21,7 @@ export const create = async (
 ) => {
   try {
     const { categoryId, title, author, pages, isBorrowable } = req.body;
+    const title_vector = String(title);
     const newRefBook = await pool.query(
       ` INSERT INTO "ReferenceBook" (
         "categoryId",
@@ -28,8 +29,9 @@ export const create = async (
         author,
         pages,
         "isBorrowable"
-       ) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [categoryId, title, author, pages, isBorrowable]
+        "searchVector",
+       ) VALUES ($1, $2, $3, $4, $5 to_tsvector($6)) RETURNING *`,
+      [categoryId, title, author, pages, isBorrowable, title_vector]
     );
     res.status(200).send({ data: newRefBook.rows });
   } catch (e) {

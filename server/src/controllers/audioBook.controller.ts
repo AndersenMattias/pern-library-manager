@@ -3,7 +3,9 @@ import { pool } from '../config/db';
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const audioBooks = await pool.query(`SELECT * FROM "AudioBook"`);
+    const audioBooks = await pool.query(
+      `SELECT * FROM "AudioBook" ORDER BY title ASC`
+    );
     res
       .status(200)
       .send({ message: 'AudioBooks found.', data: audioBooks.rows });
@@ -21,15 +23,18 @@ export const create = async (
 ) => {
   try {
     const { categoryId, title, runTimeMinutes, isBorrowable } = req.body;
+    const title_vector = String(req.body.title);
     const newAudioBook = await pool.query(
       `INSERT INTO "AudioBook" ("categoryId",
     title,
     "runTimeMinutes",
-    "isBorrowable")
-    VALUES ($1, $2, $3, $4)
+    "isBorrowable",
+    "searchVector"
+    )
+    VALUES ($1, $2, $3, $4, to_tsvector($5))
     RETURNING *
     `,
-      [categoryId, title, runTimeMinutes, isBorrowable]
+      [categoryId, title, runTimeMinutes, isBorrowable, title_vector]
     );
     res
       .status(200)
