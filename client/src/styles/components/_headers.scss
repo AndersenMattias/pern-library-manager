@@ -1,0 +1,11 @@
+@use '../index' as *;
+
+.heroImg {
+  display: flex;
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-image: url('https://cdn.pixabay.com/photo/2017/10/09/21/13/malmo-2834882_960_720.jpg');
+  margin: 0;
+  padding: 40% 0 0;
+}
