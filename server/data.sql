@@ -7,9 +7,12 @@ CREATE TABLE "Book" (
   title VARCHAR ,
   author VARCHAR ,
   pages INT ,
+  "searchVector" TSVECTOR,
   "isBorrowable" BIT,
   borrower VARCHAR,
-  "borrowDate" DATE
+  "borrowDate" DATE,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  "updateAt" TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE "DVD" (
@@ -17,9 +20,12 @@ CREATE TABLE "DVD" (
   "categoryId" INT REFERENCES "Category"(id),
   title VARCHAR ,
   "runTimeMinutes" INT,
+   "searchVector" TSVECTOR,
   "isBorrowable" BIT,
   borrower VARCHAR,
-  "borrowDate" DATE
+  "borrowDate" DATE,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  "updateAt" TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE "AudioBook" (
@@ -27,9 +33,12 @@ CREATE TABLE "AudioBook" (
   "categoryId" INT REFERENCES "Category"(id),
   title VARCHAR ,
   "runTimeMinutes" INT,
+   "searchVector" TSVECTOR,
   "isBorrowable" BIT,
   borrower VARCHAR,
-  "borrowDate" DATE
+  "borrowDate" DATE,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  "updateAt" TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE "ReferenceBook" (
@@ -38,9 +47,12 @@ CREATE TABLE "ReferenceBook" (
   title VARCHAR ,
   author VARCHAR ,
   pages INT ,
+  "searchVector" TSVECTOR,
   "isBorrowable" BIT NULL,
   borrower VARCHAR,
-  "borrowDate" DATE
+  "borrowDate" DATE,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  "updateAt" TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE "Category" (
@@ -48,18 +60,69 @@ CREATE TABLE "Category" (
   "categoryName" VARCHAR  UNIQUE
 );
 
-CREATE TABLE "Employees" (
+CREATE TABLE "Employee" (
   id SERIAL PRIMARY KEY,
+  "managerId" INT REFERENCES "Manager"(id),
   "firstName" VARCHAR ,
   "lastName" VARCHAR ,
+  email VARCHAR,
+  username VARCHAR,
+  password VARCHAR,
   salary DECIMAL,
-  "isCEO" BIT,
-  "isManager" BIT,
-  "managerId" INT
+  "isCEO" BIT DEFAULT '0'::bit NOT NULL,
+  "isManager" BIT DEFAULT '1'::bit NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  "updateAt" TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE "Manager" (
+  id SERIAL PRIMARY KEY,
+  "ceoId" INT REFERENCES "CEO"(id),
+  "areaResponsibility" VARCHAR,
+  email VARCHAR,
+  username VARCHAR,
+  password VARCHAR,
+  salary DECIMAL,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  "updateAt" TIMESTAMP WITH TIME ZONE  
+);
+
+CREATE TABLE "CEO" (
+  id int GENERATED ALWAYS AS (1) STORED UNIQUE,
+  email VARCHAR,
+  username VARCHAR,
+  password VARCHAR,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  "updateAt" TIMESTAMP WITH TIME ZONE  
 );
 
 INSERT INTO "ReferenceBook" ("categoryId", title, author, pages, "isBorrowable", borrower, "borrowDate") 
 VALUES (8, 'Gone Girl', 'Test', 121, '1', 'Mattias', '2022-08-9') RETURNING *;
+
+INSERT INTO "Book" (
+        "categoryId",
+        title,
+        author,
+        pages,
+        "isBorrowable",
+        "searchVector"       
+       ) VALUES (8, 'Min bror heter Nisse.', 'Mattias', 431, null, to_tsvector('Min bror heter Nisse.')) RETURNING *
+
+INSERT INTO "ReferenceBook" (
+        "categoryId",
+        title,
+        author,
+        pages,
+        "isBorrowable",
+        "searchVector"       
+       ) VALUES (8, 'Berättelsen om Nisse som bodde i skogen.', 'Mattias', 431, null, to_tsvector('Berättelsen om Nisse som bodde i skogen.')) RETURNING *
+
+
+INSERT INTO "Manager" ("ceoId", "areaResponsibility", email, username, password, salary) VALUES (1, 'HR', 'harlenback@gmail.com', 'harlenback', '123', 32.000)
+
+SELECT * FROM "Employee" ORDER BY "firstName" ASC 
+SELECT * FROM "Employee" JOIN "Manager" ON "Employee"."managerId" = "Manager".id;
+
 
 DROP TABLE "LibraryItem";
 DROP TABLE "Category";

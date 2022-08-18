@@ -7,6 +7,7 @@ import {
   audioBookRoute,
   dvdRoute,
   bookRoute,
+  employeeRoute,
 } from './routes/';
 
 dotenv.config();
@@ -33,3 +34,5 @@ app.use('/api/', refBookRoute);
 app.use('/api/', audioBookRoute);
 app.use('/api/', dvdRoute);
 app.use('/api/', bookRoute);
+
+app.use('/api/', employeeRoute);
