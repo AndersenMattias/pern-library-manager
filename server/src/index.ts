@@ -8,6 +8,7 @@ import {
   dvdRoute,
   bookRoute,
   employeeRoute,
+  managerRoute,
 } from './routes/';
 
 dotenv.config();
@@ -29,10 +30,13 @@ const startServer = () => {
 
 startServer();
 
+// Libraryitems
 app.use('/api/', catRoute);
 app.use('/api/', refBookRoute);
 app.use('/api/', audioBookRoute);
 app.use('/api/', dvdRoute);
 app.use('/api/', bookRoute);
 
+// Employees
 app.use('/api/', employeeRoute);
+app.use('/api/', managerRoute);

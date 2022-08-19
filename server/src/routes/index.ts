@@ -4,6 +4,7 @@ import { audioBookRoute } from './audioBookRoutes';
 import { dvdRoute } from './dvdRoutes';
 import { bookRoute } from './bookRoutes';
 import { employeeRoute } from './employeeRoutes';
+import { managerRoute } from './managerRoutes';
 
 export {
   catRoute,
@@ -12,4 +13,5 @@ export {
   dvdRoute,
   bookRoute,
   employeeRoute,
+  managerRoute,
 };
