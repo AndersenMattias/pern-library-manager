@@ -14,6 +14,27 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+export const getOne = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const username = req.params.username;
+    const getEmployee = await pool.query(
+      `SELECT * FROM "Employee" WHERE username = $1`,
+      [username]
+    );
+    res
+      .status(200)
+      .send({ message: 'Employee found.', data: getEmployee.rows });
+  } catch (e) {
+    if (e instanceof Error) {
+      throw new Error('Something went wrong..');
+    }
+  }
+};
+
 export const create = async (
   req: Request,
   res: Response,
