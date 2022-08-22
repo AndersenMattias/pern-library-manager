@@ -1,0 +1,145 @@
+@use '../index' as *;
+
+.navbar {
+  background-color: #4287f5;
+  // z-index: 999;
+  text-align: center;
+  width: 100%;
+  // padding: 1rem 3rem;
+  position: absolute;
+  // left: 0px;
+  top: 0px;
+
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+
+    h1 {
+      padding-left: 0.7em;
+      font-weight: 200;
+      color: black;
+    }
+
+    .loginBtn-container {
+      float: right;
+    }
+
+    button {
+      border: none;
+      background-color: transparent;
+      margin: 0.8em;
+    }
+  }
+
+  .hamburger {
+    float: right;
+    padding-right: 0.5em;
+  }
+}
+
+ul {
+  list-style-type: none;
+}
+
+.navbarList {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.hamburger {
+  @include for-size(tablet) {
+    display: none;
+  }
+}
+
+.navbarContainer {
+  display: flex;
+  justify-content: space-evenly;
+
+  .hamburger,
+  .closeMenu {
+    @include for-size(phone) {
+      align-self: center;
+    }
+  }
+}
+
+.closeMenu {
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  margin: 1em;
+}
+
+.links {
+  display: flex;
+  color: white;
+  width: 80%;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin: 20px;
+  font-size: 1em;
+}
+
+.toggleButton {
+  display: flex;
+  @include for-size(tablet) {
+    display: flex;
+  }
+}
+
+.toggleButton svg {
+  font-size: 50px;
+}
+.toggleButton button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.open {
+  position: absolute;
+  background-color: rgb(250, 248, 248);
+  height: 100vh;
+  width: 100%;
+  top: 0;
+  z-index: 1;
+}
+
+.open .links {
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: 100px;
+}
+
+.open a {
+  width: 100%;
+  text-align: center;
+  color: black;
+}
+
+.close {
+  @include for-size(phone) {
+    display: none;
+  }
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.close a {
+  @include for-size(phone) {
+    display: none;
+  }
+}
+
+// .login-wrapper {
+//   @include for-size(phone) {
+//     display: none;
+//   }
+// }
