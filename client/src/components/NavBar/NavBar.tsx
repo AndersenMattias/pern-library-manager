@@ -11,6 +11,7 @@ import { FaUser } from 'react-icons/fa';
 const NavBar = () => {
   const [expandNavbar, setExpandNavbar] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [toggleLogin, setToggleLogin] = useState<boolean>(false);
 
   const location = useLocation();
 
@@ -42,6 +43,11 @@ const NavBar = () => {
     </div>
   );
 
+  const onLogout = () => {
+    setExpandNavbar((prev) => !prev);
+    setToggleLogin(!toggleLogin);
+  };
+
   // console.log('employee logged in: ', employees);
 
   return (
@@ -53,38 +59,49 @@ const NavBar = () => {
               <h1>The city library</h1>
             </Link>
           </div>
+          {!toggleLogin && (
+            <div className='loginBtn-container'>
+              <button onClick={() => setModalOpen(true)}>
+                <FaUser />
 
-          <div className='loginBtn-container'>
-            <button onClick={() => setModalOpen(true)}>
-              <FaUser />
-
-              <p>Login</p>
-            </button>
-          </div>
+                <p>Login</p>
+              </button>
+            </div>
+          )}
         </div>
 
         {expandNavbar ? closeIcon : hamburgerIcon}
 
         <div className={expandNavbar ? 'open' : 'close'}>
           <ul>
-            <Link to='/about'>
-              <li>about</li>
+            <Link to='/my-page'>
+              <li>My page</li>
             </Link>
-            <Link to='/blog'>
-              <li>blog</li>
+            <Link to='/library'>
+              <li>View library</li>
             </Link>
-            <Link to='/projects'>
-              <li>projects</li>
+            <Link to='/events'>
+              <li>Events</li>
             </Link>
             <Link to='/contact'>
-              <li>contact</li>
+              <li>Contact</li>
             </Link>
+            {toggleLogin && (
+              <li>
+                <button onClick={onLogout}>Logout</button>
+              </li>
+            )}
           </ul>
         </div>
       </nav>
 
       {modalOpen && (
-        <LoginModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+        <LoginModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          toggleLogin={toggleLogin}
+          setToggleLogin={setToggleLogin}
+        />
       )}
     </header>
   );

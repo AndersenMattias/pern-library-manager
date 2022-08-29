@@ -18,40 +18,42 @@
   display: flex;
   flex-direction: column;
   padding: 1.2em;
-}
 
-.modalContainer .title {
-  display: inline-block;
-  text-align: center;
-  margin-top: 10px;
+  .title {
+    display: inline-block;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .body {
+    flex: 50%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    align-items: center;
+    font-size: 1.7rem;
+    text-align: center;
+  }
+
+  .footer {
+    flex: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .titleCloseBtn {
   display: flex;
   justify-content: flex-end;
-}
 
-.titleCloseBtn button {
-  background-color: transparent;
-  border: none;
-  font-size: 25px;
-  cursor: pointer;
-}
-
-.modalContainer .body {
-  flex: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.7rem;
-  text-align: center;
-}
-
-.modalContainer .footer {
-  flex: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  button {
+    background-color: transparent;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+  }
 }
 
 .modalContainer .footer button {

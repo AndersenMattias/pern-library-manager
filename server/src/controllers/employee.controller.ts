@@ -6,7 +6,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const getEmployees = await pool.query(
       `SELECT * FROM "Employee" ORDER BY "firstName" ASC `
     );
-    res.status(200).send({ message: 'Employees found.', data: getEmployees });
+    res
+      .status(200)
+      .send({ message: 'Employees found.', data: getEmployees.rows });
   } catch (e) {
     if (e instanceof Error) {
       throw new Error('Something went wrong..');
@@ -20,11 +22,38 @@ export const getOne = async (
   next: NextFunction
 ) => {
   try {
-    const username = req.params.username;
+    const id = parseInt(req.params.id);
     const getEmployee = await pool.query(
-      `SELECT * FROM "Employee" WHERE username = $1`,
+      `SELECT * FROM "Employee" WHERE id = $1`,
+      [id]
+    );
+    res
+      .status(200)
+      .send({ message: 'Employee found.', data: getEmployee.rows });
+  } catch (e) {
+    if (e instanceof Error) {
+      throw new Error('Something went wrong..');
+    }
+  }
+};
+
+export const getOneWithManager = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const username = req.params.username;
+    console.log(username);
+    const getEmployee = await pool.query(
+      `SELECT *
+      FROM "Employee"
+      JOIN "Manager" 
+      ON "Employee"."managerId" = "Manager".id
+      WHERE "Employee".username = $1`,
       [username]
     );
+    console.log(getEmployee.rows);
     res
       .status(200)
       .send({ message: 'Employee found.', data: getEmployee.rows });
@@ -85,7 +114,9 @@ export const edit = async (req: Request, res: Response, next: NextFunction) => {
       salary,
     } = req.body;
 
-    const newEmployee = await pool.query(
+    console.log(req.body);
+
+    const updatedEmployee = await pool.query(
       `UPDATE "Employee" SET "managerId" = $1,
       "firstName" = $2,
       "lastName" = $3,
@@ -100,7 +131,7 @@ export const edit = async (req: Request, res: Response, next: NextFunction) => {
     );
     res
       .status(200)
-      .send({ message: 'Employee updated.', data: newEmployee.rows });
+      .send({ message: 'Employee updated.', data: updatedEmployee.rows });
   } catch (e) {
     if (e instanceof Error) {
       throw new Error('Something went wrong..');

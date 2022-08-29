@@ -1,21 +1,25 @@
 import { useState } from 'react';
 import { IEditUser } from '../../interfaces/employee';
+import { employeeStore } from '../../store';
 
-const EditUser = ({ employee }: IEditUser) => {
+const EditUser = ({ user }: IEditUser) => {
   const [input, setInput] = useState({
-    firstName: employee.firstName,
-    lastName: employee.lastName,
-    email: employee.email,
-    username: employee.username,
-    password: employee.password,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    username: user.username,
+    password: user.password,
   });
+
+  const { setEmployee } = employeeStore();
+  // const employeeX = employeeStore((state) => state.employee);
 
   const onHandleInput = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
     setInput((prev) => ({ ...prev, [name]: value }));
   };
 
-  const onHandleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
+  const onHandleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const updatedEmployee = {
       firstName: input.firstName,
@@ -23,13 +27,32 @@ const EditUser = ({ employee }: IEditUser) => {
       email: input.email,
       username: input.username,
       password: input.password,
+      salary: user.salary,
+      managerId: user.managerId,
     };
 
-    console.log(updatedEmployee);
+    try {
+      const res = await fetch(
+        `http://localhost:8000/api/employees/${user.id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedEmployee),
+        }
+      );
+
+      const json = await res.json();
+
+      setEmployee(json.data);
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new Error('Couldnt update employee.');
+      }
+    }
   };
 
   return (
-    <form className='myPage-form' key={employee.id} onSubmit={onHandleUpdate}>
+    <form className='myPage-form' key={user.id} onSubmit={onHandleUpdate}>
       <label>Firstname</label>
       <input
         type='text'
@@ -65,15 +88,28 @@ const EditUser = ({ employee }: IEditUser) => {
         value={input.password}
         onChange={onHandleInput}
       />
-      {(parseInt(employee.isManager) === 1 ||
-        parseInt(employee.isCEO) === 1) && (
-        <>
-          <label>Salary</label>
-          <input type='text' value={employee.salary} />
-          <label>Manager</label>
-          <input type='number' value={employee.managerId} />
-        </>
-      )}
+      <>
+        <label>Salary</label>
+        <input
+          type='text'
+          value={user.salary}
+          disabled={
+            parseInt(user.isManager) || parseInt(user.isCEO) === 1
+              ? false
+              : true
+          }
+        />
+        <label>Manager</label>
+        <input
+          type='number'
+          value={user.managerId}
+          disabled={
+            parseInt(user.isManager) || parseInt(user.isCEO) === 1
+              ? false
+              : true
+          }
+        />
+      </>
       <button type='submit'>Update</button>
     </form>
   );

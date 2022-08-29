@@ -63,14 +63,14 @@ CREATE TABLE "Category" (
 CREATE TABLE "Employee" (
   id SERIAL PRIMARY KEY,
   "managerId" INT REFERENCES "Manager"(id),
-  "firstName" VARCHAR ,
-  "lastName" VARCHAR ,
+  "isCEO" BIT DEFAULT '0'::bit NOT NULL,
+  "isManager" BIT DEFAULT '0'::bit NOT NULL,
+  "firstName" VARCHAR,
+  "lastName" VARCHAR,
   email VARCHAR,
   username VARCHAR,
   password VARCHAR,
   salary DECIMAL,
-  "isCEO" BIT DEFAULT '0'::bit NOT NULL,
-  "isManager" BIT DEFAULT '1'::bit NOT NULL,
   "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
   "updateAt" TIMESTAMP WITH TIME ZONE
 );
@@ -78,10 +78,14 @@ CREATE TABLE "Employee" (
 CREATE TABLE "Manager" (
   id SERIAL PRIMARY KEY,
   "ceoId" INT REFERENCES "CEO"(id),
-  "areaResponsibility" VARCHAR,
+  "isCEO" BIT DEFAULT '0'::bit NOT NULL,
+  "isManager" BIT DEFAULT '1'::bit NOT NULL,
+  "firstName" VARCHAR,
+  "lastName" VARCHAR,
   email VARCHAR,
   username VARCHAR,
   password VARCHAR,
+  "areaResponsibility" VARCHAR,
   salary DECIMAL,
   "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
   "updateAt" TIMESTAMP WITH TIME ZONE  
@@ -89,6 +93,8 @@ CREATE TABLE "Manager" (
 
 CREATE TABLE "CEO" (
   id int GENERATED ALWAYS AS (1) STORED UNIQUE,
+  "isCEO" BIT DEFAULT '1'::bit NOT NULL,
+  "isManager" BIT DEFAULT '1'::bit NOT NULL,
   email VARCHAR,
   username VARCHAR,
   password VARCHAR,
@@ -122,6 +128,9 @@ INSERT INTO "Manager" ("ceoId", "areaResponsibility", email, username, password,
 
 SELECT * FROM "Employee" ORDER BY "firstName" ASC 
 SELECT * FROM "Employee" JOIN "Manager" ON "Employee"."managerId" = "Manager".id;
+SELECT * FROM "Employee" JOIN "Manager" ON "Employee"."managerId" = "Manager".id 
+WHERE "Employee".id = 2
+
 
 
 DROP TABLE "LibraryItem";

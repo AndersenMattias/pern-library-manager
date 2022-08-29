@@ -6,25 +6,16 @@ import '../styles/pages/_myPage.scss';
 import { EditUser } from '../components';
 
 const MyPage = () => {
-  const { employees } = employeeStore();
+  const { employee } = employeeStore();
+  const x = employeeStore((state) => state.employee);
+  console.log(x);
   const [toggleEdit, setToggleEdit] = useState<boolean>(false);
 
-  const [input, setInput] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    username: '',
-    password: '',
-  });
-
-  const onHandleInput = (e: React.FormEvent<HTMLInputElement>) => {
-    const { name, value } = e.currentTarget;
-    setInput((prev) => ({ ...prev, [name]: value }));
-  };
+  console.log(employee);
 
   return (
     <div>
-      {employees.map((employee: IEmployee) => {
+      {employee.map((employee: IEmployee) => {
         return (
           <>
             <h4>Welcome {employee.firstName}</h4>
@@ -36,7 +27,6 @@ const MyPage = () => {
                   name='firstName'
                   disabled={true}
                   value={employee.firstName}
-                  onChange={onHandleInput}
                 />
                 <label>Lastname</label>
                 <input
@@ -44,7 +34,6 @@ const MyPage = () => {
                   name='lastName'
                   disabled={true}
                   value={employee.lastName}
-                  onChange={onHandleInput}
                 />
                 <label>Email</label>
                 <input
@@ -52,7 +41,6 @@ const MyPage = () => {
                   name='email'
                   disabled={true}
                   value={employee.email}
-                  onChange={onHandleInput}
                 />
                 <label>Username</label>
                 <input
@@ -60,7 +48,6 @@ const MyPage = () => {
                   name='username'
                   disabled={true}
                   value={employee.username}
-                  onChange={onHandleInput}
                 />
                 <label>Password</label>
                 <input
@@ -68,24 +55,23 @@ const MyPage = () => {
                   name='password'
                   disabled={true}
                   value={employee.password}
-                  onChange={onHandleInput}
                 />
-                {(parseInt(employee.isManager) === 1 ||
-                  parseInt(employee.isCEO) === 1) && (
-                  <>
-                    <label>Salary</label>
-                    <input type='text' value={employee.salary} />
-                    <label>Manager</label>
-                    <input type='number' value={employee.managerId} />
-                  </>
-                )}
+
+                <label>Salary</label>
+                <input type='text' disabled={true} value={employee.salary} />
+                <label>Manager</label>
+                <input
+                  type='number'
+                  disabled={true}
+                  value={employee.managerId}
+                />
               </form>
             )}
 
             <button type='button' onClick={() => setToggleEdit(!toggleEdit)}>
               Edit
             </button>
-            {toggleEdit && <EditUser employee={employee} />}
+            {toggleEdit && <EditUser user={employee} />}
           </>
         );
       })}

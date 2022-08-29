@@ -6,7 +6,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const getManagers = await pool.query(
       `SELECT * FROM "Manager" ORDER BY "firstName" ASC `
     );
-    res.status(200).send({ message: 'Employees found.', data: getManagers });
+    res
+      .status(200)
+      .send({ message: 'Employees found.', data: getManagers.rows });
   } catch (e) {
     if (e instanceof Error) {
       throw new Error('Something went wrong..');

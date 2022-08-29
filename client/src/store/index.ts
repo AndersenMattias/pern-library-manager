@@ -16,21 +16,22 @@ interface Employee {
 }
 
 interface ZustandStore {
-  employees: Employee[];
+  employee: Employee[];
   setEmployee: any;
-  reset: any;
+  reset: () => void;
 }
 
 const initialState = {
-  employees: [] as Employee[],
+  employee: [] as Employee[],
 };
 
 export const employeeStore = create<ZustandStore>((set, get) => ({
   ...initialState,
-  setEmployee: (employees: Employee[]) =>
+
+  setEmployee: (employee: Employee[]) =>
     set((state) => ({
       ...state,
-      employees,
+      employee,
     })),
   reset: () => set(initialState),
 }));

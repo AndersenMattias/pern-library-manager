@@ -6,13 +6,18 @@ import '../../styles/components/_loginModal.scss';
 import { useNavigate } from 'react-router-dom';
 
 interface ILoginModalProps {
+  toggleLogin: boolean;
+  setToggleLogin: React.Dispatch<React.SetStateAction<boolean>>;
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const LoginModal = ({ setModalOpen, modalOpen }: ILoginModalProps) => {
-  const [toggleLogin, setToggleLogin] = useState<boolean>(false);
-
+const LoginModal = ({
+  setModalOpen,
+  modalOpen,
+  toggleLogin,
+  setToggleLogin,
+}: ILoginModalProps) => {
   // login state
   const [input, setInput] = useState({
     username: '',
@@ -21,13 +26,18 @@ const LoginModal = ({ setModalOpen, modalOpen }: ILoginModalProps) => {
 
   const navigate = useNavigate();
 
-  const { setEmployee, employees, reset } = employeeStore();
+  const { setEmployee, employee, reset } = employeeStore();
+
+  console.log('inloggad', employee);
 
   const onFetchEmployee = async () => {
     const res = await fetch(
       `http://localhost:8000/api/employees/${input.username}`
     );
     const json = await res.json();
+
+    console.log(json.data);
+
     setEmployee(json.data);
   };
 
@@ -44,7 +54,6 @@ const LoginModal = ({ setModalOpen, modalOpen }: ILoginModalProps) => {
   const onLogout = () => {
     reset();
     setToggleLogin(!toggleLogin);
-    console.log('employee logged out: ', employees);
   };
 
   const onHandleInput = (e: React.FormEvent<HTMLInputElement>) => {
